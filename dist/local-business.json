@@ -1,0 +1,730 @@
+{
+	"marccent": 1,
+	"kit": {
+		"name": "local-business",
+		"title": "Local business",
+		"output": "wp",
+		"about": "A business that serves an area: its details, services, service areas and cities, locations, hours and closed days, reviews and questions.",
+		"version": 1,
+		"components": [
+			"Section",
+			"Grid",
+			"Card",
+			"Button",
+			"Accordion",
+			"AccordionItem",
+			"Form",
+			"Field"
+		],
+		"needs": []
+	},
+	"parts": {
+		"content": {
+			"groups": {
+				"business": {
+					"label": "Business",
+					"repeat": false,
+					"on": [
+						"options"
+					],
+					"fields": {
+						"name": {
+							"type": "string",
+							"label": "Name"
+						},
+						"profession": {
+							"type": "string",
+							"label": "What it is",
+							"help": "In a phrase: Plumber. Used as \"Plumber in Springfield, IL\". The schema type (LocalBusiness) can be made more precise in the group's schema: Plumber, GeneralContractor…"
+						},
+						"services_label": {
+							"type": "string",
+							"label": "Its services, together",
+							"help": "plumbing services"
+						},
+						"summary": {
+							"type": "text",
+							"label": "Summary",
+							"help": "Two or three sentences: what it does and where. Search and AI answers quote it."
+						},
+						"telephone": {
+							"type": "string",
+							"label": "Phone (for links)",
+							"help": "+1-555-555-0100"
+						},
+						"phone": {
+							"type": "string",
+							"label": "Phone (as shown)",
+							"help": "(555) 555-0100"
+						},
+						"email": {
+							"type": "email",
+							"label": "Email"
+						},
+						"street": {
+							"type": "string",
+							"label": "Street address",
+							"help": "12 Main St. Empty: the business is listed by city only (a business that works at its customers’ places may hide it)."
+						},
+						"city": {
+							"type": "string",
+							"label": "City"
+						},
+						"state": {
+							"type": "string",
+							"label": "State",
+							"help": "Two letters: ID"
+						},
+						"postal_code": {
+							"type": "string",
+							"label": "Postal code",
+							"help": "83402"
+						},
+						"country": {
+							"type": "string",
+							"label": "Country",
+							"help": "Two letters: US"
+						},
+						"latitude": {
+							"type": "number",
+							"label": "Latitude",
+							"help": "Where the map centers."
+						},
+						"longitude": {
+							"type": "number",
+							"label": "Longitude"
+						},
+						"map_link": {
+							"type": "url",
+							"label": "Google Maps link"
+						},
+						"service_area": {
+							"type": "string",
+							"label": "Service area",
+							"help": "One line: Springfield and the towns around it in central Illinois"
+						},
+						"services_page": {
+							"type": "string",
+							"label": "Services page",
+							"help": "The slug of the page the service pages sit under."
+						},
+						"hours": {
+							"type": "hours",
+							"label": "Opening hours",
+							"help": "08:00-17:00, or two spans: 08:00-12:00, 13:00-17:00. Empty: closed.",
+							"closed_days": "closures"
+						}
+					},
+					"schema": {
+						"type": "LocalBusiness",
+						"id": "organization",
+						"map": {
+							"name": "name",
+							"alternateName": {
+								"@each": "business_names",
+								"@value": "name"
+							},
+							"description": "summary",
+							"telephone": "telephone",
+							"email": "email",
+							"address": {
+								"@type": "PostalAddress",
+								"streetAddress": "street",
+								"addressLocality": "city",
+								"addressRegion": "state",
+								"postalCode": "postal_code",
+								"addressCountry": "country"
+							},
+							"geo": {
+								"@type": "GeoCoordinates",
+								"latitude": "latitude",
+								"longitude": "longitude"
+							},
+							"hasMap": "map_link",
+							"sameAs": {
+								"@each": "profiles",
+								"@value": "link"
+							},
+							"knowsAbout": {
+								"@each": "specialties",
+								"@value": "specialty"
+							},
+							"areaServed": {
+								"@each": "city",
+								"@type": "City",
+								"@id": "{{ link }}#place",
+								"name": "{{ title }}, {{ state }}",
+								"url": "{{ link }}"
+							},
+							"openingHoursSpecification": "hours",
+							"specialOpeningHoursSpecification": "hours:special",
+							"hasOfferCatalog": {
+								"@type": "OfferCatalog",
+								"name": "services_label",
+								"itemListElement": {
+									"@each": "services",
+									"@type": "Offer",
+									"itemOffered": {
+										"@type": "Service",
+										"name": "name",
+										"serviceType": "type",
+										"description": "covers"
+									}
+								}
+							},
+							"contactPoint": {
+								"@type": "ContactPoint",
+								"contactType": "customer service",
+								"telephone": "telephone",
+								"email": "email"
+							},
+							"image": "{{ site:logo }}"
+						}
+					}
+				},
+				"business_names": {
+					"label": "Other names",
+					"repeat": true,
+					"on": [
+						"options"
+					],
+					"fields": {
+						"name": {
+							"type": "string",
+							"label": "Name",
+							"help": "Another name people use for the business."
+						}
+					}
+				},
+				"profiles": {
+					"label": "Profiles",
+					"repeat": true,
+					"on": [
+						"options"
+					],
+					"fields": {
+						"link": {
+							"type": "url",
+							"label": "Link",
+							"help": "The business’s page on Facebook, Instagram…"
+						}
+					}
+				},
+				"specialties": {
+					"label": "Specialties",
+					"repeat": true,
+					"on": [
+						"options"
+					],
+					"fields": {
+						"specialty": {
+							"type": "string",
+							"label": "Specialty"
+						}
+					}
+				},
+				"services": {
+					"label": "Services",
+					"repeat": true,
+					"on": [
+						"options"
+					],
+					"fields": {
+						"slug": {
+							"type": "string",
+							"label": "Slug",
+							"help": "Its page’s slug, under the services page: drains"
+						},
+						"name": {
+							"type": "string",
+							"label": "Name",
+							"help": "Drain Cleaning"
+						},
+						"type": {
+							"type": "string",
+							"label": "Type",
+							"help": "Its serviceType: Drain cleaning"
+						},
+						"covers": {
+							"type": "text",
+							"label": "Covers",
+							"help": "kitchen, bath and main lines…"
+						}
+					}
+				},
+				"closures": {
+					"label": "Closed days",
+					"repeat": true,
+					"on": [
+						"options"
+					],
+					"fields": {
+						"date": {
+							"type": "date",
+							"label": "Date"
+						},
+						"hours": {
+							"type": "string",
+							"label": "Hours",
+							"help": "Empty: closed all day. Or a short day: 09:00-12:00"
+						},
+						"note": {
+							"type": "string",
+							"label": "Note",
+							"help": "Christmas"
+						}
+					}
+				},
+				"locations": {
+					"label": "Locations",
+					"repeat": true,
+					"on": [
+						"options"
+					],
+					"fields": {
+						"slug": {
+							"type": "string",
+							"label": "Slug",
+							"help": "downtown"
+						},
+						"name": {
+							"type": "string",
+							"label": "Name",
+							"help": "Downtown"
+						},
+						"street": {
+							"type": "string",
+							"label": "Street"
+						},
+						"city": {
+							"type": "string",
+							"label": "City"
+						},
+						"state": {
+							"type": "string",
+							"label": "State"
+						},
+						"postal_code": {
+							"type": "string",
+							"label": "Postal code"
+						},
+						"telephone": {
+							"type": "string",
+							"label": "Phone (for links)"
+						},
+						"phone": {
+							"type": "string",
+							"label": "Phone (as shown)"
+						},
+						"latitude": {
+							"type": "number",
+							"label": "Latitude"
+						},
+						"longitude": {
+							"type": "number",
+							"label": "Longitude"
+						},
+						"map_link": {
+							"type": "url",
+							"label": "Google Maps link"
+						},
+						"hours": {
+							"type": "hours",
+							"label": "Opening hours",
+							"help": "Empty every day: the business’s hours."
+						}
+					}
+				},
+				"call_bar": {
+					"label": "Call bar",
+					"repeat": false,
+					"on": [
+						"options"
+					],
+					"fields": {
+						"show": {
+							"type": "boolean",
+							"label": "Show it on phones",
+							"help": "A bar along the bottom of the screen with a call button (the business’s phone) and a link to the quote form."
+						},
+						"call_label": {
+							"type": "string",
+							"label": "Call button",
+							"help": "Call"
+						},
+						"quote_label": {
+							"type": "string",
+							"label": "Quote button",
+							"help": "Get a quote. Empty: a call button only."
+						},
+						"quote_link": {
+							"type": "string",
+							"label": "Quote link",
+							"help": "The quote form’s anchor (#form), or a page’s address."
+						}
+					}
+				},
+				"reviews": {
+					"label": "Reviews",
+					"repeat": true,
+					"on": [
+						"options"
+					],
+					"fields": {
+						"name": {
+							"type": "string",
+							"label": "Name",
+							"help": "Who wrote it, as the review shows it"
+						},
+						"rating": {
+							"type": "number",
+							"label": "Rating",
+							"help": "Stars, 1 to 5"
+						},
+						"review": {
+							"type": "text",
+							"label": "Review"
+						},
+						"date": {
+							"type": "date",
+							"label": "Date"
+						},
+						"link": {
+							"type": "url",
+							"label": "Link",
+							"help": "The review where it was posted"
+						},
+						"source": {
+							"type": "string",
+							"label": "Source",
+							"help": "Where it was posted: Google, Facebook…"
+						},
+						"photo": {
+							"type": "image",
+							"label": "Photo",
+							"help": "The reviewer's picture, if any"
+						}
+					}
+				},
+				"google": {
+					"label": "Google",
+					"on": [
+						"options"
+					],
+					"fields": {
+						"rating": {
+							"type": "number",
+							"label": "Rating",
+							"help": "The business's rating on Google (Fields → Sources, Google reviews)"
+						},
+						"review_count": {
+							"type": "number",
+							"label": "Review count",
+							"help": "How many reviews it has on Google"
+						}
+					}
+				},
+				"questions": {
+					"label": "Questions",
+					"repeat": true,
+					"on": [
+						"page",
+						"city"
+					],
+					"fields": {
+						"question": {
+							"type": "string",
+							"label": "Question"
+						},
+						"answer": {
+							"type": "text",
+							"label": "Answer"
+						}
+					},
+					"schema": {
+						"type": "FAQPage",
+						"id": "faq",
+						"each": {
+							"@type": "Question",
+							"name": "question",
+							"acceptedAnswer": {
+								"@type": "Answer",
+								"text": "answer"
+							}
+						}
+					}
+				},
+				"steps": {
+					"label": "Steps",
+					"repeat": true,
+					"on": [
+						"page"
+					],
+					"fields": {
+						"icon": {
+							"type": "string",
+							"label": "Icon",
+							"help": "A Font Awesome name: phone, snowflake"
+						},
+						"title": {
+							"type": "string",
+							"label": "Title"
+						},
+						"text": {
+							"type": "text",
+							"label": "Text"
+						}
+					}
+				},
+				"photos": {
+					"label": "Photos",
+					"repeat": true,
+					"on": [
+						"page:gallery"
+					],
+					"fields": {
+						"image": {
+							"type": "image",
+							"label": "Photo",
+							"help": "Its alt text is the image's own (Media Library)"
+						},
+						"caption": {
+							"type": "string",
+							"label": "Caption",
+							"help": "A few words: Driveway, Stamped patio"
+						},
+						"service": {
+							"type": "select",
+							"label": "Service",
+							"options": [
+								"flatwork",
+								"decorative-concrete",
+								"foundations",
+								"curb"
+							],
+							"help": "The gallery section it's in"
+						},
+						"featured": {
+							"type": "string",
+							"label": "Also shown on",
+							"help": "Pages that show it in their recent work, comma-separated: home, flatwork"
+						}
+					}
+				},
+				"city_details": {
+					"label": "City details",
+					"on": [
+						"city"
+					],
+					"fields": {
+						"state": {
+							"type": "string",
+							"label": "State",
+							"help": "Its full name: Idaho"
+						},
+						"state_code": {
+							"type": "string",
+							"label": "State code",
+							"help": "Two letters: ID"
+						},
+						"county": {
+							"type": "string",
+							"label": "County",
+							"help": "Bonneville County"
+						},
+						"latitude": {
+							"type": "number",
+							"label": "Latitude",
+							"help": "Decimal degrees, e.g. 43.4917 (for the map and search)"
+						},
+						"longitude": {
+							"type": "number",
+							"label": "Longitude",
+							"help": "Decimal degrees, e.g. -112.0339"
+						},
+						"nearby": {
+							"type": "relation",
+							"to": "city",
+							"multiple": true,
+							"label": "Nearby cities",
+							"help": "Listed under Nearby Service Areas on its page"
+						}
+					},
+					"schema": {
+						"type": "City",
+						"id": "place",
+						"map": {
+							"name": "{{ title }}, {{ state }}",
+							"geo": {
+								"@type": "GeoCoordinates",
+								"latitude": "latitude",
+								"longitude": "longitude"
+							},
+							"containedInPlace": {
+								"@type": "AdministrativeArea",
+								"name": "{{ county }}, {{ state }}",
+								"containedInPlace": {
+									"@type": "State",
+									"name": "state"
+								}
+							}
+						}
+					}
+				}
+			},
+			"types": {
+				"city": {
+					"label": "Cities",
+					"singular": "City",
+					"slug": "service-areas",
+					"icon": "dashicons-location",
+					"archive": false,
+					"supports": [
+						"title",
+						"editor",
+						"excerpt",
+						"thumbnail",
+						"page-attributes",
+						"revisions"
+					]
+				}
+			}
+		},
+		"patterns": {
+			"hero": {
+				"title": "Hero: what the business does, where",
+				"categories": [
+					"banner"
+				],
+				"description": "The top of the home page from the Business group: what it does and where, its summary (the lines search and AI answers quote) and the two next steps.",
+				"keywords": [
+					"hero",
+					"business"
+				],
+				"content": "<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"surface\":\"bg-secondary\",\"version\":1} -->\n<!-- wp:marccent/grid {\"columns\":1,\"gap\":\"gap-sm\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:heading {\"level\":1} -->\n<h1 class=\"wp-block-heading\">{{ business.profession }} in {{ business.city }}, {{ business.state }}</h1>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph {\"className\":\"fs-lg measure\"} -->\n<p class=\"fs-lg measure\">{{ business.summary }}</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:marccent/grid {\"layout\":\"row-wrap\",\"gap\":\"gap-sm\",\"version\":2} -->\n<!-- wp:marccent/button {\"icon\":\"file-signature\",\"href\":\"#form\",\"label\":\"Request a quote\",\"version\":1} /-->\n\n<!-- wp:marccent/button {\"icon\":\"phone\",\"href\":\"tel:{{ business.telephone }}\",\"label\":\"{{ business.phone }}\",\"color\":\"light\",\"version\":1} /-->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/section -->"
+			},
+			"services": {
+				"title": "Services: a card for each service page",
+				"categories": [
+					"text"
+				],
+				"description": "The pages under the services page, a card each, from a Loop: a new service page shows up by itself.",
+				"keywords": [
+					"services",
+					"cards"
+				],
+				"content": "<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"version\":1} -->\n<!-- wp:marccent/grid {\"columns\":1,\"gap\":\"gap-sm\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Our services</h2>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>{{ business.service_area }}</p>\n<!-- /wp:paragraph -->\n<!-- /wp:marccent/grid -->\n\n<!-- wp:marccent/loop {\"postType\":\"page\",\"perPage\":12,\"orderBy\":\"menu_order\",\"order\":\"asc\",\"parent\":\"services\"} -->\n<!-- wp:marccent/card {\"rows\":0,\"version\":1} -->\n<!-- wp:marccent/field {\"key\":\"image\"} /-->\n\n<!-- wp:marccent/field {\"tag\":\"h3\",\"link\":true} /-->\n\n<!-- wp:marccent/field {\"key\":\"excerpt\",\"format\":\"words:24\"} /-->\n\n<!-- wp:marccent/button {\"href\":\"{{ link }}\",\"label\":\"More about {{ title }}\",\"version\":1} /-->\n<!-- /wp:marccent/card -->\n<!-- /wp:marccent/loop -->\n<!-- /wp:marccent/section -->"
+			},
+			"questions": {
+				"title": "Questions and answers",
+				"categories": [
+					"text"
+				],
+				"description": "The page’s Questions rows as an accordion; the same rows are its FAQPage schema, so what visitors read is what search and AI answers read.",
+				"keywords": [
+					"faq",
+					"questions"
+				],
+				"content": "<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"surface\":\"bg\",\"version\":1} -->\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Questions</h2>\n<!-- /wp:heading -->\n\n<!-- wp:marccent/accordion {\"version\":1} -->\n<!-- wp:marccent/loop {\"source\":\"questions\",\"perPage\":20} -->\n<!-- wp:marccent/accordion-item {\"header\":\"{{ question }}\",\"version\":1} -->\n<!-- wp:paragraph -->\n<p>{{ answer }}</p>\n<!-- /wp:paragraph -->\n<!-- /wp:marccent/accordion-item -->\n<!-- /wp:marccent/loop -->\n<!-- /wp:marccent/accordion -->\n<!-- /wp:marccent/section -->"
+			},
+			"contact": {
+				"title": "Contact: a quote form, the hours and the phone",
+				"categories": [
+					"contact"
+				],
+				"description": "A quote form beside the business’s hours and whether it’s open now (Site content → Business).",
+				"keywords": [
+					"contact",
+					"form",
+					"hours"
+				],
+				"content": "<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"version\":1,\"anchor\":\"form\"} -->\n<!-- wp:marccent/grid {\"columns\":2,\"gap\":\"gap-lg\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:marccent/grid {\"columns\":1,\"gap\":\"gap-sm\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Get a free quote</h2>\n<!-- /wp:heading -->\n\n<!-- wp:marccent/form {\"submitLabel\":\"Send\",\"successMessage\":\"Thanks! We got it and will be in touch within a day.\",\"version\":1} -->\n<!-- wp:marccent/form-field {\"name\":\"name\",\"label\":\"Name\",\"required\":true,\"version\":1} /-->\n\n<!-- wp:marccent/form-field {\"name\":\"phone\",\"label\":\"Phone\",\"type\":\"tel\",\"required\":true,\"version\":1} /-->\n\n<!-- wp:marccent/form-field {\"name\":\"email\",\"label\":\"Email\",\"type\":\"email\",\"version\":1} /-->\n\n<!-- wp:marccent/form-field {\"name\":\"message\",\"label\":\"What do you need?\",\"type\":\"textarea\",\"version\":1} /-->\n\n<!-- wp:marccent/form-field {\"name\":\"photo\",\"label\":\"A photo (optional)\",\"type\":\"file\",\"accept\":\"image/*\",\"version\":1} /-->\n<!-- /wp:marccent/form -->\n<!-- /wp:marccent/grid -->\n\n<!-- wp:marccent/grid {\"columns\":1,\"gap\":\"gap-sm\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\">Hours</h3>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p><strong>{{ business.hours:open_now }}</strong></p>\n<!-- /wp:paragraph -->\n\n<!-- wp:marccent/field {\"key\":\"business.hours\"} /-->\n\n<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\">Call us</h3>\n<!-- /wp:heading -->\n\n<!-- wp:marccent/grid {\"layout\":\"row-wrap\",\"gap\":\"gap-sm\",\"version\":2} -->\n<!-- wp:marccent/button {\"icon\":\"phone\",\"href\":\"tel:{{ business.telephone }}\",\"label\":\"{{ business.phone }}\",\"color\":\"secondary\",\"version\":1} /-->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/section -->"
+			},
+			"locations": {
+				"title": "Locations",
+				"categories": [
+					"contact"
+				],
+				"description": "The business’s offices or shops (Site content → Locations), each with its address, phone, hours and directions.",
+				"keywords": [
+					"locations",
+					"offices"
+				],
+				"content": "<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"version\":1} -->\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Where to find us</h2>\n<!-- /wp:heading -->\n\n<!-- wp:marccent/loop {\"source\":\"locations\",\"perPage\":20,\"from\":\"options\",\"columns\":2} -->\n<!-- wp:marccent/card {\"rows\":0,\"version\":1} -->\n<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\">{{ name }}</h3>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>{{ street }}, {{ city }}, {{ state }} {{ postal_code }}</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:paragraph -->\n<p><a href=\"tel:{{ telephone }}\">{{ phone }}</a></p>\n<!-- /wp:paragraph -->\n\n<!-- wp:marccent/field {\"key\":\"hours\"} /-->\n\n<!-- wp:marccent/grid {\"layout\":\"row-wrap\",\"gap\":\"gap-sm\",\"version\":2} -->\n<!-- wp:marccent/button {\"icon\":\"diamond-turn-right\",\"href\":\"{{ map_link }}\",\"label\":\"Directions\",\"color\":\"secondary\",\"version\":1} /-->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/card -->\n<!-- /wp:marccent/loop -->\n<!-- /wp:marccent/section -->"
+			},
+			"service-areas": {
+				"title": "Service areas: a card for each city",
+				"categories": [
+					"text"
+				],
+				"description": "The cities the business serves (Cities, their own pages), a card each; each city is a Place in the schema, and the business’s areaServed.",
+				"keywords": [
+					"cities",
+					"areas"
+				],
+				"content": "<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"version\":1} -->\n<!-- wp:marccent/grid {\"columns\":1,\"gap\":\"gap-sm\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Where we work</h2>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>{{ business.service_area }}</p>\n<!-- /wp:paragraph -->\n<!-- /wp:marccent/grid -->\n\n<!-- wp:marccent/loop {\"postType\":\"city\",\"perPage\":48,\"orderBy\":\"title\",\"order\":\"asc\",\"columns\":4} -->\n<!-- wp:marccent/card {\"rows\":0,\"version\":1} -->\n<!-- wp:marccent/field {\"tag\":\"h3\",\"link\":true} /-->\n\n<!-- wp:paragraph -->\n<p>{{ county }}, {{ state }}</p>\n<!-- /wp:paragraph -->\n<!-- /wp:marccent/card -->\n<!-- /wp:marccent/loop -->\n<!-- /wp:marccent/section -->"
+			},
+			"gallery": {
+				"title": "Gallery: the gallery page’s photos",
+				"categories": [
+					"gallery"
+				],
+				"description": "The gallery page’s Photos rows in a grid.",
+				"keywords": [
+					"gallery",
+					"photos"
+				],
+				"content": "<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"version\":1} -->\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Our work</h2>\n<!-- /wp:heading -->\n\n<!-- wp:marccent/loop {\"source\":\"photos\",\"perPage\":24,\"from\":\"gallery\",\"gap\":\"gap-sm\",\"paginate\":true} -->\n<!-- wp:marccent/field {\"key\":\"image\"} /-->\n\n<!-- wp:marccent/field {\"key\":\"caption\"} /-->\n<!-- /wp:marccent/loop -->\n<!-- /wp:marccent/section -->"
+			}
+		},
+		"pages": {
+			"home": {
+				"title": "Home",
+				"parent": "",
+				"content": "<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"surface\":\"bg-secondary\",\"version\":1} -->\n<!-- wp:marccent/grid {\"columns\":1,\"gap\":\"gap-sm\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:heading {\"level\":1} -->\n<h1 class=\"wp-block-heading\">{{ business.profession }} in {{ business.city }}, {{ business.state }}</h1>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph {\"className\":\"fs-lg measure\"} -->\n<p class=\"fs-lg measure\">{{ business.summary }}</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:marccent/grid {\"layout\":\"row-wrap\",\"gap\":\"gap-sm\",\"version\":2} -->\n<!-- wp:marccent/button {\"icon\":\"file-signature\",\"href\":\"#form\",\"label\":\"Request a quote\",\"version\":1} /-->\n\n<!-- wp:marccent/button {\"icon\":\"phone\",\"href\":\"tel:{{ business.telephone }}\",\"label\":\"{{ business.phone }}\",\"color\":\"light\",\"version\":1} /-->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/section -->\n\n<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"version\":1} -->\n<!-- wp:marccent/grid {\"columns\":1,\"gap\":\"gap-sm\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Our services</h2>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>{{ business.service_area }}</p>\n<!-- /wp:paragraph -->\n<!-- /wp:marccent/grid -->\n\n<!-- wp:marccent/loop {\"postType\":\"page\",\"perPage\":12,\"orderBy\":\"menu_order\",\"order\":\"asc\",\"parent\":\"services\"} -->\n<!-- wp:marccent/card {\"rows\":0,\"version\":1} -->\n<!-- wp:marccent/field {\"key\":\"image\"} /-->\n\n<!-- wp:marccent/field {\"tag\":\"h3\",\"link\":true} /-->\n\n<!-- wp:marccent/field {\"key\":\"excerpt\",\"format\":\"words:24\"} /-->\n\n<!-- wp:marccent/button {\"href\":\"{{ link }}\",\"label\":\"More about {{ title }}\",\"version\":1} /-->\n<!-- /wp:marccent/card -->\n<!-- /wp:marccent/loop -->\n<!-- /wp:marccent/section -->\n\n<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"surface\":\"bg\",\"version\":1} -->\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Questions</h2>\n<!-- /wp:heading -->\n\n<!-- wp:marccent/accordion {\"version\":1} -->\n<!-- wp:marccent/loop {\"source\":\"questions\",\"perPage\":20} -->\n<!-- wp:marccent/accordion-item {\"header\":\"{{ question }}\",\"version\":1} -->\n<!-- wp:paragraph -->\n<p>{{ answer }}</p>\n<!-- /wp:paragraph -->\n<!-- /wp:marccent/accordion-item -->\n<!-- /wp:marccent/loop -->\n<!-- /wp:marccent/accordion -->\n<!-- /wp:marccent/section -->\n\n<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"version\":1,\"anchor\":\"form\"} -->\n<!-- wp:marccent/grid {\"columns\":2,\"gap\":\"gap-lg\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:marccent/grid {\"columns\":1,\"gap\":\"gap-sm\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Get a free quote</h2>\n<!-- /wp:heading -->\n\n<!-- wp:marccent/form {\"submitLabel\":\"Send\",\"successMessage\":\"Thanks! We got it and will be in touch within a day.\",\"version\":1} -->\n<!-- wp:marccent/form-field {\"name\":\"name\",\"label\":\"Name\",\"required\":true,\"version\":1} /-->\n\n<!-- wp:marccent/form-field {\"name\":\"phone\",\"label\":\"Phone\",\"type\":\"tel\",\"required\":true,\"version\":1} /-->\n\n<!-- wp:marccent/form-field {\"name\":\"email\",\"label\":\"Email\",\"type\":\"email\",\"version\":1} /-->\n\n<!-- wp:marccent/form-field {\"name\":\"message\",\"label\":\"What do you need?\",\"type\":\"textarea\",\"version\":1} /-->\n\n<!-- wp:marccent/form-field {\"name\":\"photo\",\"label\":\"A photo (optional)\",\"type\":\"file\",\"accept\":\"image/*\",\"version\":1} /-->\n<!-- /wp:marccent/form -->\n<!-- /wp:marccent/grid -->\n\n<!-- wp:marccent/grid {\"columns\":1,\"gap\":\"gap-sm\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\">Hours</h3>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p><strong>{{ business.hours:open_now }}</strong></p>\n<!-- /wp:paragraph -->\n\n<!-- wp:marccent/field {\"key\":\"business.hours\"} /-->\n\n<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\">Call us</h3>\n<!-- /wp:heading -->\n\n<!-- wp:marccent/grid {\"layout\":\"row-wrap\",\"gap\":\"gap-sm\",\"version\":2} -->\n<!-- wp:marccent/button {\"icon\":\"phone\",\"href\":\"tel:{{ business.telephone }}\",\"label\":\"{{ business.phone }}\",\"color\":\"secondary\",\"version\":1} /-->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/section -->"
+			},
+			"services": {
+				"title": "Services",
+				"parent": "",
+				"content": "<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"version\":1} -->\n<!-- wp:marccent/grid {\"columns\":1,\"gap\":\"gap-sm\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Our services</h2>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>{{ business.service_area }}</p>\n<!-- /wp:paragraph -->\n<!-- /wp:marccent/grid -->\n\n<!-- wp:marccent/loop {\"postType\":\"page\",\"perPage\":12,\"orderBy\":\"menu_order\",\"order\":\"asc\",\"parent\":\"services\"} -->\n<!-- wp:marccent/card {\"rows\":0,\"version\":1} -->\n<!-- wp:marccent/field {\"key\":\"image\"} /-->\n\n<!-- wp:marccent/field {\"tag\":\"h3\",\"link\":true} /-->\n\n<!-- wp:marccent/field {\"key\":\"excerpt\",\"format\":\"words:24\"} /-->\n\n<!-- wp:marccent/button {\"href\":\"{{ link }}\",\"label\":\"More about {{ title }}\",\"version\":1} /-->\n<!-- /wp:marccent/card -->\n<!-- /wp:marccent/loop -->\n<!-- /wp:marccent/section -->\n\n<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"version\":1,\"anchor\":\"form\"} -->\n<!-- wp:marccent/grid {\"columns\":2,\"gap\":\"gap-lg\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:marccent/grid {\"columns\":1,\"gap\":\"gap-sm\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Get a free quote</h2>\n<!-- /wp:heading -->\n\n<!-- wp:marccent/form {\"submitLabel\":\"Send\",\"successMessage\":\"Thanks! We got it and will be in touch within a day.\",\"version\":1} -->\n<!-- wp:marccent/form-field {\"name\":\"name\",\"label\":\"Name\",\"required\":true,\"version\":1} /-->\n\n<!-- wp:marccent/form-field {\"name\":\"phone\",\"label\":\"Phone\",\"type\":\"tel\",\"required\":true,\"version\":1} /-->\n\n<!-- wp:marccent/form-field {\"name\":\"email\",\"label\":\"Email\",\"type\":\"email\",\"version\":1} /-->\n\n<!-- wp:marccent/form-field {\"name\":\"message\",\"label\":\"What do you need?\",\"type\":\"textarea\",\"version\":1} /-->\n\n<!-- wp:marccent/form-field {\"name\":\"photo\",\"label\":\"A photo (optional)\",\"type\":\"file\",\"accept\":\"image/*\",\"version\":1} /-->\n<!-- /wp:marccent/form -->\n<!-- /wp:marccent/grid -->\n\n<!-- wp:marccent/grid {\"columns\":1,\"gap\":\"gap-sm\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\">Hours</h3>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p><strong>{{ business.hours:open_now }}</strong></p>\n<!-- /wp:paragraph -->\n\n<!-- wp:marccent/field {\"key\":\"business.hours\"} /-->\n\n<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\">Call us</h3>\n<!-- /wp:heading -->\n\n<!-- wp:marccent/grid {\"layout\":\"row-wrap\",\"gap\":\"gap-sm\",\"version\":2} -->\n<!-- wp:marccent/button {\"icon\":\"phone\",\"href\":\"tel:{{ business.telephone }}\",\"label\":\"{{ business.phone }}\",\"color\":\"secondary\",\"version\":1} /-->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/section -->"
+			},
+			"service-areas": {
+				"title": "Service areas",
+				"parent": "",
+				"content": "<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"version\":1} -->\n<!-- wp:marccent/grid {\"columns\":1,\"gap\":\"gap-sm\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Where we work</h2>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>{{ business.service_area }}</p>\n<!-- /wp:paragraph -->\n<!-- /wp:marccent/grid -->\n\n<!-- wp:marccent/loop {\"postType\":\"city\",\"perPage\":48,\"orderBy\":\"title\",\"order\":\"asc\",\"columns\":4} -->\n<!-- wp:marccent/card {\"rows\":0,\"version\":1} -->\n<!-- wp:marccent/field {\"tag\":\"h3\",\"link\":true} /-->\n\n<!-- wp:paragraph -->\n<p>{{ county }}, {{ state }}</p>\n<!-- /wp:paragraph -->\n<!-- /wp:marccent/card -->\n<!-- /wp:marccent/loop -->\n<!-- /wp:marccent/section -->"
+			},
+			"gallery": {
+				"title": "Gallery",
+				"parent": "",
+				"content": "<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"version\":1} -->\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Our work</h2>\n<!-- /wp:heading -->\n\n<!-- wp:marccent/loop {\"source\":\"photos\",\"perPage\":24,\"from\":\"gallery\",\"gap\":\"gap-sm\",\"paginate\":true} -->\n<!-- wp:marccent/field {\"key\":\"image\"} /-->\n\n<!-- wp:marccent/field {\"key\":\"caption\"} /-->\n<!-- /wp:marccent/loop -->\n<!-- /wp:marccent/section -->"
+			},
+			"contact": {
+				"title": "Contact",
+				"parent": "",
+				"content": "<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"version\":1,\"anchor\":\"form\"} -->\n<!-- wp:marccent/grid {\"columns\":2,\"gap\":\"gap-lg\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:marccent/grid {\"columns\":1,\"gap\":\"gap-sm\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Get a free quote</h2>\n<!-- /wp:heading -->\n\n<!-- wp:marccent/form {\"submitLabel\":\"Send\",\"successMessage\":\"Thanks! We got it and will be in touch within a day.\",\"version\":1} -->\n<!-- wp:marccent/form-field {\"name\":\"name\",\"label\":\"Name\",\"required\":true,\"version\":1} /-->\n\n<!-- wp:marccent/form-field {\"name\":\"phone\",\"label\":\"Phone\",\"type\":\"tel\",\"required\":true,\"version\":1} /-->\n\n<!-- wp:marccent/form-field {\"name\":\"email\",\"label\":\"Email\",\"type\":\"email\",\"version\":1} /-->\n\n<!-- wp:marccent/form-field {\"name\":\"message\",\"label\":\"What do you need?\",\"type\":\"textarea\",\"version\":1} /-->\n\n<!-- wp:marccent/form-field {\"name\":\"photo\",\"label\":\"A photo (optional)\",\"type\":\"file\",\"accept\":\"image/*\",\"version\":1} /-->\n<!-- /wp:marccent/form -->\n<!-- /wp:marccent/grid -->\n\n<!-- wp:marccent/grid {\"columns\":1,\"gap\":\"gap-sm\",\"alignItems\":\"items-start\",\"version\":2} -->\n<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\">Hours</h3>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p><strong>{{ business.hours:open_now }}</strong></p>\n<!-- /wp:paragraph -->\n\n<!-- wp:marccent/field {\"key\":\"business.hours\"} /-->\n\n<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\">Call us</h3>\n<!-- /wp:heading -->\n\n<!-- wp:marccent/grid {\"layout\":\"row-wrap\",\"gap\":\"gap-sm\",\"version\":2} -->\n<!-- wp:marccent/button {\"icon\":\"phone\",\"href\":\"tel:{{ business.telephone }}\",\"label\":\"{{ business.phone }}\",\"color\":\"secondary\",\"version\":1} /-->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/section -->\n\n<!-- wp:marccent/section {\"verticalPadding\":\"pad-y-lg\",\"version\":1} -->\n<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">Where to find us</h2>\n<!-- /wp:heading -->\n\n<!-- wp:marccent/loop {\"source\":\"locations\",\"perPage\":20,\"from\":\"options\",\"columns\":2} -->\n<!-- wp:marccent/card {\"rows\":0,\"version\":1} -->\n<!-- wp:heading {\"level\":3} -->\n<h3 class=\"wp-block-heading\">{{ name }}</h3>\n<!-- /wp:heading -->\n\n<!-- wp:paragraph -->\n<p>{{ street }}, {{ city }}, {{ state }} {{ postal_code }}</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:paragraph -->\n<p><a href=\"tel:{{ telephone }}\">{{ phone }}</a></p>\n<!-- /wp:paragraph -->\n\n<!-- wp:marccent/field {\"key\":\"hours\"} /-->\n\n<!-- wp:marccent/grid {\"layout\":\"row-wrap\",\"gap\":\"gap-sm\",\"version\":2} -->\n<!-- wp:marccent/button {\"icon\":\"diamond-turn-right\",\"href\":\"{{ map_link }}\",\"label\":\"Directions\",\"color\":\"secondary\",\"version\":1} /-->\n<!-- /wp:marccent/grid -->\n<!-- /wp:marccent/card -->\n<!-- /wp:marccent/loop -->\n<!-- /wp:marccent/section -->"
+			}
+		},
+		"site_content": {
+			"business": {
+				"name": "Your business",
+				"profession": "Plumber",
+				"services_label": "plumbing services",
+				"summary": "Two or three sentences: what the business does, for whom and where. Search and AI answers quote them.",
+				"telephone": "+1-555-555-0100",
+				"phone": "(555) 555-0100",
+				"city": "Springfield",
+				"state": "IL",
+				"country": "US",
+				"service_area": "Springfield and the towns around it"
+			},
+			"services": [
+				{
+					"slug": "repairs",
+					"name": "Repairs",
+					"type": "Repair",
+					"covers": "What this service covers."
+				}
+			]
+		}
+	}
+}

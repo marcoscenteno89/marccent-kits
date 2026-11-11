@@ -1,0 +1,571 @@
+{
+	"groups": {
+		"business": {
+			"label": "Business",
+			"repeat": false,
+			"on": [
+				"options"
+			],
+			"fields": {
+				"name": {
+					"type": "string",
+					"label": "Name"
+				},
+				"profession": {
+					"type": "string",
+					"label": "What it is",
+					"help": "In a phrase: Plumber. Used as \"Plumber in Springfield, IL\". The schema type (LocalBusiness) can be made more precise in the group's schema: Plumber, GeneralContractor…"
+				},
+				"services_label": {
+					"type": "string",
+					"label": "Its services, together",
+					"help": "plumbing services"
+				},
+				"summary": {
+					"type": "text",
+					"label": "Summary",
+					"help": "Two or three sentences: what it does and where. Search and AI answers quote it."
+				},
+				"telephone": {
+					"type": "string",
+					"label": "Phone (for links)",
+					"help": "+1-555-555-0100"
+				},
+				"phone": {
+					"type": "string",
+					"label": "Phone (as shown)",
+					"help": "(555) 555-0100"
+				},
+				"email": {
+					"type": "email",
+					"label": "Email"
+				},
+				"street": {
+					"type": "string",
+					"label": "Street address",
+					"help": "12 Main St. Empty: the business is listed by city only (a business that works at its customers’ places may hide it)."
+				},
+				"city": {
+					"type": "string",
+					"label": "City"
+				},
+				"state": {
+					"type": "string",
+					"label": "State",
+					"help": "Two letters: ID"
+				},
+				"postal_code": {
+					"type": "string",
+					"label": "Postal code",
+					"help": "83402"
+				},
+				"country": {
+					"type": "string",
+					"label": "Country",
+					"help": "Two letters: US"
+				},
+				"latitude": {
+					"type": "number",
+					"label": "Latitude",
+					"help": "Where the map centers."
+				},
+				"longitude": {
+					"type": "number",
+					"label": "Longitude"
+				},
+				"map_link": {
+					"type": "url",
+					"label": "Google Maps link"
+				},
+				"service_area": {
+					"type": "string",
+					"label": "Service area",
+					"help": "One line: Springfield and the towns around it in central Illinois"
+				},
+				"services_page": {
+					"type": "string",
+					"label": "Services page",
+					"help": "The slug of the page the service pages sit under."
+				},
+				"hours": {
+					"type": "hours",
+					"label": "Opening hours",
+					"help": "08:00-17:00, or two spans: 08:00-12:00, 13:00-17:00. Empty: closed.",
+					"closed_days": "closures"
+				}
+			},
+			"schema": {
+				"type": "LocalBusiness",
+				"id": "organization",
+				"map": {
+					"name": "name",
+					"alternateName": {
+						"@each": "business_names",
+						"@value": "name"
+					},
+					"description": "summary",
+					"telephone": "telephone",
+					"email": "email",
+					"address": {
+						"@type": "PostalAddress",
+						"streetAddress": "street",
+						"addressLocality": "city",
+						"addressRegion": "state",
+						"postalCode": "postal_code",
+						"addressCountry": "country"
+					},
+					"geo": {
+						"@type": "GeoCoordinates",
+						"latitude": "latitude",
+						"longitude": "longitude"
+					},
+					"hasMap": "map_link",
+					"sameAs": {
+						"@each": "profiles",
+						"@value": "link"
+					},
+					"knowsAbout": {
+						"@each": "specialties",
+						"@value": "specialty"
+					},
+					"areaServed": {
+						"@each": "city",
+						"@type": "City",
+						"@id": "{{ link }}#place",
+						"name": "{{ title }}, {{ state }}",
+						"url": "{{ link }}"
+					},
+					"openingHoursSpecification": "hours",
+					"specialOpeningHoursSpecification": "hours:special",
+					"hasOfferCatalog": {
+						"@type": "OfferCatalog",
+						"name": "services_label",
+						"itemListElement": {
+							"@each": "services",
+							"@type": "Offer",
+							"itemOffered": {
+								"@type": "Service",
+								"name": "name",
+								"serviceType": "type",
+								"description": "covers"
+							}
+						}
+					},
+					"contactPoint": {
+						"@type": "ContactPoint",
+						"contactType": "customer service",
+						"telephone": "telephone",
+						"email": "email"
+					},
+					"image": "{{ site:logo }}"
+				}
+			}
+		},
+		"business_names": {
+			"label": "Other names",
+			"repeat": true,
+			"on": [
+				"options"
+			],
+			"fields": {
+				"name": {
+					"type": "string",
+					"label": "Name",
+					"help": "Another name people use for the business."
+				}
+			}
+		},
+		"profiles": {
+			"label": "Profiles",
+			"repeat": true,
+			"on": [
+				"options"
+			],
+			"fields": {
+				"link": {
+					"type": "url",
+					"label": "Link",
+					"help": "The business’s page on Facebook, Instagram…"
+				}
+			}
+		},
+		"specialties": {
+			"label": "Specialties",
+			"repeat": true,
+			"on": [
+				"options"
+			],
+			"fields": {
+				"specialty": {
+					"type": "string",
+					"label": "Specialty"
+				}
+			}
+		},
+		"services": {
+			"label": "Services",
+			"repeat": true,
+			"on": [
+				"options"
+			],
+			"fields": {
+				"slug": {
+					"type": "string",
+					"label": "Slug",
+					"help": "Its page’s slug, under the services page: drains"
+				},
+				"name": {
+					"type": "string",
+					"label": "Name",
+					"help": "Drain Cleaning"
+				},
+				"type": {
+					"type": "string",
+					"label": "Type",
+					"help": "Its serviceType: Drain cleaning"
+				},
+				"covers": {
+					"type": "text",
+					"label": "Covers",
+					"help": "kitchen, bath and main lines…"
+				}
+			}
+		},
+		"closures": {
+			"label": "Closed days",
+			"repeat": true,
+			"on": [
+				"options"
+			],
+			"fields": {
+				"date": {
+					"type": "date",
+					"label": "Date"
+				},
+				"hours": {
+					"type": "string",
+					"label": "Hours",
+					"help": "Empty: closed all day. Or a short day: 09:00-12:00"
+				},
+				"note": {
+					"type": "string",
+					"label": "Note",
+					"help": "Christmas"
+				}
+			}
+		},
+		"locations": {
+			"label": "Locations",
+			"repeat": true,
+			"on": [
+				"options"
+			],
+			"fields": {
+				"slug": {
+					"type": "string",
+					"label": "Slug",
+					"help": "downtown"
+				},
+				"name": {
+					"type": "string",
+					"label": "Name",
+					"help": "Downtown"
+				},
+				"street": {
+					"type": "string",
+					"label": "Street"
+				},
+				"city": {
+					"type": "string",
+					"label": "City"
+				},
+				"state": {
+					"type": "string",
+					"label": "State"
+				},
+				"postal_code": {
+					"type": "string",
+					"label": "Postal code"
+				},
+				"telephone": {
+					"type": "string",
+					"label": "Phone (for links)"
+				},
+				"phone": {
+					"type": "string",
+					"label": "Phone (as shown)"
+				},
+				"latitude": {
+					"type": "number",
+					"label": "Latitude"
+				},
+				"longitude": {
+					"type": "number",
+					"label": "Longitude"
+				},
+				"map_link": {
+					"type": "url",
+					"label": "Google Maps link"
+				},
+				"hours": {
+					"type": "hours",
+					"label": "Opening hours",
+					"help": "Empty every day: the business’s hours."
+				}
+			}
+		},
+		"call_bar": {
+			"label": "Call bar",
+			"repeat": false,
+			"on": [
+				"options"
+			],
+			"fields": {
+				"show": {
+					"type": "boolean",
+					"label": "Show it on phones",
+					"help": "A bar along the bottom of the screen with a call button (the business’s phone) and a link to the quote form."
+				},
+				"call_label": {
+					"type": "string",
+					"label": "Call button",
+					"help": "Call"
+				},
+				"quote_label": {
+					"type": "string",
+					"label": "Quote button",
+					"help": "Get a quote. Empty: a call button only."
+				},
+				"quote_link": {
+					"type": "string",
+					"label": "Quote link",
+					"help": "The quote form’s anchor (#form), or a page’s address."
+				}
+			}
+		},
+		"reviews": {
+			"label": "Reviews",
+			"repeat": true,
+			"on": [
+				"options"
+			],
+			"fields": {
+				"name": {
+					"type": "string",
+					"label": "Name",
+					"help": "Who wrote it, as the review shows it"
+				},
+				"rating": {
+					"type": "number",
+					"label": "Rating",
+					"help": "Stars, 1 to 5"
+				},
+				"review": {
+					"type": "text",
+					"label": "Review"
+				},
+				"date": {
+					"type": "date",
+					"label": "Date"
+				},
+				"link": {
+					"type": "url",
+					"label": "Link",
+					"help": "The review where it was posted"
+				},
+				"source": {
+					"type": "string",
+					"label": "Source",
+					"help": "Where it was posted: Google, Facebook…"
+				},
+				"photo": {
+					"type": "image",
+					"label": "Photo",
+					"help": "The reviewer's picture, if any"
+				}
+			}
+		},
+		"google": {
+			"label": "Google",
+			"on": [
+				"options"
+			],
+			"fields": {
+				"rating": {
+					"type": "number",
+					"label": "Rating",
+					"help": "The business's rating on Google (Fields → Sources, Google reviews)"
+				},
+				"review_count": {
+					"type": "number",
+					"label": "Review count",
+					"help": "How many reviews it has on Google"
+				}
+			}
+		},
+		"questions": {
+			"label": "Questions",
+			"repeat": true,
+			"on": [
+				"page",
+				"city"
+			],
+			"fields": {
+				"question": {
+					"type": "string",
+					"label": "Question"
+				},
+				"answer": {
+					"type": "text",
+					"label": "Answer"
+				}
+			},
+			"schema": {
+				"type": "FAQPage",
+				"id": "faq",
+				"each": {
+					"@type": "Question",
+					"name": "question",
+					"acceptedAnswer": {
+						"@type": "Answer",
+						"text": "answer"
+					}
+				}
+			}
+		},
+		"steps": {
+			"label": "Steps",
+			"repeat": true,
+			"on": [
+				"page"
+			],
+			"fields": {
+				"icon": {
+					"type": "string",
+					"label": "Icon",
+					"help": "A Font Awesome name: phone, snowflake"
+				},
+				"title": {
+					"type": "string",
+					"label": "Title"
+				},
+				"text": {
+					"type": "text",
+					"label": "Text"
+				}
+			}
+		},
+		"photos": {
+			"label": "Photos",
+			"repeat": true,
+			"on": [
+				"page:gallery"
+			],
+			"fields": {
+				"image": {
+					"type": "image",
+					"label": "Photo",
+					"help": "Its alt text is the image's own (Media Library)"
+				},
+				"caption": {
+					"type": "string",
+					"label": "Caption",
+					"help": "A few words: Driveway, Stamped patio"
+				},
+				"service": {
+					"type": "select",
+					"label": "Service",
+					"options": [
+						"flatwork",
+						"decorative-concrete",
+						"foundations",
+						"curb"
+					],
+					"help": "The gallery section it's in"
+				},
+				"featured": {
+					"type": "string",
+					"label": "Also shown on",
+					"help": "Pages that show it in their recent work, comma-separated: home, flatwork"
+				}
+			}
+		},
+		"city_details": {
+			"label": "City details",
+			"on": [
+				"city"
+			],
+			"fields": {
+				"state": {
+					"type": "string",
+					"label": "State",
+					"help": "Its full name: Idaho"
+				},
+				"state_code": {
+					"type": "string",
+					"label": "State code",
+					"help": "Two letters: ID"
+				},
+				"county": {
+					"type": "string",
+					"label": "County",
+					"help": "Bonneville County"
+				},
+				"latitude": {
+					"type": "number",
+					"label": "Latitude",
+					"help": "Decimal degrees, e.g. 43.4917 (for the map and search)"
+				},
+				"longitude": {
+					"type": "number",
+					"label": "Longitude",
+					"help": "Decimal degrees, e.g. -112.0339"
+				},
+				"nearby": {
+					"type": "relation",
+					"to": "city",
+					"multiple": true,
+					"label": "Nearby cities",
+					"help": "Listed under Nearby Service Areas on its page"
+				}
+			},
+			"schema": {
+				"type": "City",
+				"id": "place",
+				"map": {
+					"name": "{{ title }}, {{ state }}",
+					"geo": {
+						"@type": "GeoCoordinates",
+						"latitude": "latitude",
+						"longitude": "longitude"
+					},
+					"containedInPlace": {
+						"@type": "AdministrativeArea",
+						"name": "{{ county }}, {{ state }}",
+						"containedInPlace": {
+							"@type": "State",
+							"name": "state"
+						}
+					}
+				}
+			}
+		}
+	},
+	"types": {
+		"city": {
+			"label": "Cities",
+			"singular": "City",
+			"slug": "service-areas",
+			"icon": "dashicons-location",
+			"archive": false,
+			"supports": [
+				"title",
+				"editor",
+				"excerpt",
+				"thumbnail",
+				"page-attributes",
+				"revisions"
+			]
+		}
+	}
+}

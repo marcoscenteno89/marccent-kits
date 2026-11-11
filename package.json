@@ -1,0 +1,15 @@
+{
+  "name": "marccent-kits",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Marccent's kits: field groups, post types, patterns and starter pages a site imports (marccent-theme's docs/KITS.md).",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "kits": "node scripts/build.mjs && node scripts/kits.mjs",
+    "test": "node scripts/build.mjs && node scripts/kits.mjs"
+  },
+  "devDependencies": {
+    "marccent-theme": "github:marcoscenteno89/marccent-theme#020a0ac5074b4ce5d549923c2fefa468167197d5"
+  }
+}
