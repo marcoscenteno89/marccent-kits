@@ -16,4 +16,4 @@ dist/<name>.json          the built kit, the file people import (Tools → Marcc
 `npm test` builds every kit (its blocks saved by Marccent Blocks' serializer, from the checkout projects.json names)
 and checks it against the theme this repo pins: the header, every block, class and component it uses, full-word names.
 
-`docs/` links to marccent-theme's docs: the rules and this repo's work list (`docs/todo/marccent-kits.md`).
+`docs/` links to marccent-theme's docs: the rules. This repo's work is the marccent-theme issues labeled `project: marccent-kits`, on the [Marccent board](https://github.com/users/marcoscenteno89/projects/1).
