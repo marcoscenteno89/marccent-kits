@@ -7,7 +7,8 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "kits": "node scripts/build.mjs && node scripts/kits.mjs",
-    "test": "node scripts/build.mjs && node scripts/kits.mjs"
+    "test": "node scripts/build.mjs && node scripts/kits.mjs",
+    "kits:import": "node scripts/build.mjs && bash scripts/import-check.sh"
   },
   "devDependencies": {
     "marccent-theme": "github:marcoscenteno89/marccent-theme#020a0ac5074b4ce5d549923c2fefa468167197d5"
