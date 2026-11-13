@@ -1,5 +1,5 @@
 /*
- * The Local business kit (marccent-theme's docs/KITS.md): a business that serves an area. Its groups are rc-imp's
+ * The Local business kit (marccent-theme's docs/KITS.md): a business that serves an area. Its groups are a local business's
  * (content.json, Fields → JSON's shape), with the schema search and answer engines read: the business as a
  * LocalBusiness (its areas served, services, profiles, hours), its questions as an FAQPage, its cities as Places.
  * Patterns show those groups; pages start a site from them. npm run build writes dist/local-business.json.
